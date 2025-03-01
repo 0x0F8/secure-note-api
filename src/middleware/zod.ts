@@ -15,9 +15,9 @@ export function zod({ body, headers, query, params }: { body?: z.ZodObject<any, 
                 const errorMessages = error.errors.map((issue: any) => ({
                     message: `${issue.path.join('.')} is ${issue.message}`,
                 }))
-                res.status(StatusCodes.BAD_REQUEST).json({ success: false, error: 'Invalid data', details: errorMessages });
+                res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: 'Invalid data', details: errorMessages });
             } else {
-                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, error: 'Internal Server Error' });
+                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: 'Internal Server Error' });
             }
         }
     };

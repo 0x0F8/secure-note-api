@@ -2810,7 +2810,7 @@ __metadata:
     is-stream: "npm:^2.0.0"
     merge-stream: "npm:^2.0.0"
     npm-run-path: "npm:^4.0.1"
-    onetime: "npm:^5.1.2"
+    oneTime: "npm:^5.1.2"
     signal-exit: "npm:^3.0.3"
     strip-final-newline: "npm:^2.0.0"
   checksum: 10c0/c8e615235e8de4c5addf2fa4c3da3e3aa59ce975a3e83533b4f6a71750fb816a2e79610dc5f1799b6e28976c9ae86747a36a606655bf8cb414a74d8d507b304f
@@ -5178,9 +5178,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"onetime@npm:^5.1.2":
+"oneTime@npm:^5.1.2":
   version: 5.1.2
-  resolution: "onetime@npm:5.1.2"
+  resolution: "oneTime@npm:5.1.2"
   dependencies:
     mimic-fn: "npm:^2.1.0"
   checksum: 10c0/ffcef6fbb2692c3c40749f31ea2e22677a876daea92959b8a80b521d95cca7a668c884d8b2045d1d8ee7d56796aa405c405462af112a1477594cc63531baeb8f

@@ -14,7 +14,7 @@ export default async function unlockNote(req: Request, res: Response) {
     const { id } = req.params;
 
     const result = await db.note.findOneAndUpdate({ '_id': new ObjectId(id) }, { '$set': { used: true } })
-    if (!result || result.used) {
+    if (!result || (result.oneTime && result.used)) {
         res.json({ success: true, data: null })
         return;
     }
