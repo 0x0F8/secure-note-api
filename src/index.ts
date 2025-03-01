@@ -1,8 +1,4 @@
-import app from './app';
+import path from 'path';
+require('dotenv').config({ path: path.resolve(process.cwd(), `.${process.env.NODE_ENV}.env`) });
+import './app'
 
-const port = process.env.PORT || 5000;
-app.listen(port, () => {
-  /* eslint-disable no-console */
-  console.log(`Listening: http://localhost:${port}`);
-  /* eslint-enable no-console */
-});
