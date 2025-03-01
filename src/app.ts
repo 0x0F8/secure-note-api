@@ -1,3 +1,4 @@
+import http from "node:http";
 import express from "express";
 import morgan from "morgan";
 import helmet from "helmet";
@@ -8,6 +9,7 @@ import { PORT, NODE_ENV } from "./constants";
 import { StatusCodes } from "http-status-codes";
 
 (async () => {
+  console.log(NODE_ENV, "mode");
   const db = new MongoDb();
   await db.connect();
   const app = express();
@@ -28,10 +30,7 @@ import { StatusCodes } from "http-status-codes";
       .json({ success: false, message: "Not found" });
   });
 
-  app.listen(PORT, () => {
-    /* eslint-disable no-console */
-    console.log(NODE_ENV, "mode");
+  http.createServer(app).listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
-    /* eslint-enable no-console */
   });
 })();
