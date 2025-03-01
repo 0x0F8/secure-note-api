@@ -2,18 +2,18 @@ import Mongo, { MongoClient } from "mongodb";
 import { MONGODB_URL } from "../constants";
 
 type NoteDocument = {
-    content: string
-}
+  content: string;
+};
 
 export default class MongoDb {
-    client = new MongoClient(MONGODB_URL)
-    note!: Mongo.Document
+  client = new MongoClient(MONGODB_URL);
+  note!: Mongo.Document;
 
-    async connect() {
-        await this.client.connect()
-        console.log('Connected to MongoDB')
+  async connect() {
+    await this.client.connect();
+    console.log("Connected to MongoDB");
 
-        const db = this.client.db()
-        this.note = db.collection<NoteDocument>('note')
-    }
+    const db = this.client.db("secure-note");
+    this.note = db.collection<NoteDocument>("note");
+  }
 }
