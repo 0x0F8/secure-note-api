@@ -6,11 +6,12 @@
     "start": "cross-env NODE_ENV=production ts-node src/index.ts",
     "start:dev": "cross-env NODE_ENV=development ts-node src/index.ts",
     "dev": "cross-env NODE_ENV=development nodemon src/index.ts",
-    "build": "cross-env NODE_ENV=production tsc && cp .production.env dist",
+    "build": "rimraf dist && cross-env NODE_ENV=production tsc",
     "start:dist": "cross-env NODE_ENV=production node dist/index.js",
     "lint": "eslint --fix src test",
     "test": "jest",
-    "typecheck": "cross-env NODE_ENV=production tsc --noEmit"
+    "typecheck": "cross-env NODE_ENV=production tsc --noEmit",
+    "deploy": "npm run build && scp -r ./dist root@ssh.secrypt.zip:/var/node/secure-note-server"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -39,6 +40,7 @@
     "eslint-plugin-import": "^2.31.0",
     "jest": "^29.7.0",
     "nodemon": "^3.1.7",
+    "rimraf": "^6.0.1",
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",

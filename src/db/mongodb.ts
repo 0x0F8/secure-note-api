@@ -11,7 +11,7 @@ export default class MongoDb {
 
   async connect() {
     await this.client.connect();
-    console.log("Connected to MongoDB");
+    console.log("connected to MongoDB");
 
     const db = this.client.db("secure-note");
     this.note = db.collection<NoteDocument>("note");
