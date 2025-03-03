@@ -4,15 +4,19 @@ import morgan from "morgan";
 import helmet from "helmet";
 import cors from "cors";
 import MongoDb from "./db/mongodb";
-import noteRouter from "./routes/note";
+import noteRouter from "./routes/file";
 import { PORT, NODE_ENV, CORS } from "./constants";
 import { StatusCodes } from "http-status-codes";
+import DigitalOcean from "./api/digitalOcean";
+import Tasks from "./tasks";
 
 (async () => {
   console.log(NODE_ENV, "mode");
   console.log("allowing hosts:", CORS);
   const db = new MongoDb();
   await db.connect();
+  const tasks = new Tasks(db);
+  const digitalOcean = new DigitalOcean();
   const app = express();
 
   app.use(morgan("dev"));
@@ -23,13 +27,14 @@ import { StatusCodes } from "http-status-codes";
       origin: CORS,
     })
   );
-  app.use(express.json());
+  app.use(express.json({ limit: "100mb" }));
   app.use((req, res, next) => {
     res.locals.db = db;
+    res.locals.api = { digitalOcean };
     next();
   });
 
-  app.use("/api/note", noteRouter);
+  app.use("/api/file", noteRouter);
   app.all("/{*splat}", (req, res) => {
     res
       .status(StatusCodes.NOT_FOUND)
@@ -39,4 +44,6 @@ import { StatusCodes } from "http-status-codes";
   http.createServer(app).listen(PORT, () => {
     console.log(`listening on port ${PORT}`);
   });
+
+  await tasks.initialize();
 })();

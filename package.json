@@ -14,7 +14,11 @@
     "deploy": "npm run build && scp -r ./dist root@ssh.secrypt.zip:/var/node/secure-note-server"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.758.0",
+    "@aws-sdk/s3-request-presigner": "^3.758.0",
+    "@hokify/agenda": "^6.3.0",
     "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
     "express": "^5.0.1",
     "express-rate-limit": "^7.5.0",
