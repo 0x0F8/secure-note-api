@@ -14,6 +14,8 @@ export const SPACES_SECRET_KEY = process.env.SPACES_SECRET_KEY!;
 export const SPACES_HOST = process.env.SPACES_HOST!;
 export const SPACES_REGION = process.env.SPACES_REGION!;
 
+export const LINK_HOST = process.env.LINK_HOST;
+
 export const FILE_CREATE_MULTIPART_THRESHOLD_MB = !Number.isNaN(
   process.env.FILE_CREATE_MULTIPART_THRESHOLD_MB
 )

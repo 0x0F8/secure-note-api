@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { z } from "zod";
-import MongoDb from "../../db/mongodb";
-import DigitalOcean from "../../api/digitalOcean";
+import MongoDb from "../../db/Mongodb";
+import DigitalOcean from "../../api/DigitalOcean";
 import { add, formatISO } from "date-fns";
 
 export const unlockFileSchema = {
@@ -33,21 +33,15 @@ export default async function unlockFile(req: Request, res: Response) {
   res.json({ success: true, data: link });
 
   if (result.oneTime) {
-    if (result.async) {
-      const deleteAfter = add(new Date(), { hours: 6 });
-      await db.deleteFile.create({
+    const deleteInterval = result.async ? { hours: 6 } : { minutes: 5 };
+    const deleteAfter = add(new Date(), deleteInterval);
+    try {
+      await db.deleteFile.insertOne({
         _id: id,
         deleteAfter: formatISO(deleteAfter),
       });
-    } else {
-      await db.file.deleteOne({
-        _id: result._id,
-      });
-      await digitalOcean.deleteMultipleFromBucket({
-        Delete: {
-          Objects: [{ Key: id }],
-        },
-      });
+    } catch (error: unknown) {
+      console.error(error);
     }
   }
 }

@@ -1,7 +1,7 @@
 import { Agenda } from "@hokify/agenda";
 import { DATABASE_NAME, MONGODB_URL } from "./constants";
-import MongoDb from "./db/mongodb";
-import DigitalOcean from "./api/digitalOcean";
+import MongoDb from "./db/Mongodb";
+import DigitalOcean from "./api/DigitalOcean";
 import { formatISO } from "date-fns";
 
 export default class Tasks {
@@ -20,19 +20,33 @@ export default class Tasks {
       "delete used one-time files",
       this.deleteUsedOneTimeFilesTask.bind(this)
     );
+    agenda.define(
+      "delete expired short links",
+      this.deleteExpiredLinksTask.bind(this)
+    );
 
     await agenda.start();
-    await agenda.every("1 hour", "delete used one-time files");
+    await agenda.every("5 minute", "delete used one-time files");
+    await agenda.every("6 hour", "delete expired short links");
+  }
+
+  async deleteExpiredLinksTask() {
+    console.log("task: delete expired short links");
+    await this.db.shortLink.deleteMany({
+      createdAt: { $lte: formatISO(new Date()) },
+    });
   }
 
   async deleteUsedOneTimeFilesTask() {
     console.log("task: delete used one-time files");
     const digitalOcean = new DigitalOcean();
 
+    let deletedCount = 0;
     let bucketKeys: { Key: string }[] = [];
     let mongoIds: string[] = [];
 
     const deleteFromDb = async (ids: string[]) => {
+      deletedCount += ids.length;
       await this.db.deleteFile.deleteMany({
         _id: { $in: ids },
       });
@@ -70,5 +84,6 @@ export default class Tasks {
         Objects: bucketKeys,
       },
     });
+    console.log(`task: delete ${deletedCount} files`);
   }
 }

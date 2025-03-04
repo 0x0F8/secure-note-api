@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import { z } from "zod";
 import { sha256 } from "../../util/crypto";
-import DigitalOcean from "../../api/digitalOcean";
+import DigitalOcean from "../../api/DigitalOcean";
+import ShortLinkController from "../../controller/ShortLinkController";
+import { LINK_HOST } from "../../constants";
 
 export const createFileSchema = {
   body: z.object({
@@ -16,6 +18,12 @@ export default async function createFile(req: Request, res: Response) {
   const { data, oneTime = true } = req.body;
 
   const id = await sha256(data);
+  const exists = await db.file.findOne({ _id: id });
+  if (exists) {
+    res.json({ success: false, data: null });
+    return;
+  }
+
   await digitalOcean.uploadToBucket({
     Key: id,
     Body: data,
@@ -29,5 +37,14 @@ export default async function createFile(req: Request, res: Response) {
     oneTime,
     async: false,
   });
-  res.json({ success: true, data: result.insertedId });
+  const shortLink = await new ShortLinkController(db).createShortLink(
+    `/unlock/${result.insertedId}`
+  );
+  res.json({
+    success: true,
+    data: {
+      id: result.insertedId,
+      shortLink: `//${LINK_HOST}/${shortLink}`,
+    },
+  });
 }

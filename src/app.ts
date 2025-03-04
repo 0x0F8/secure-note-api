@@ -3,11 +3,12 @@ import express from "express";
 import morgan from "morgan";
 import helmet from "helmet";
 import cors from "cors";
-import MongoDb from "./db/mongodb";
-import noteRouter from "./routes/file";
+import MongoDb from "./db/Mongodb";
+import fileRouter from "./routes/file";
+import shortLinkRouter from "./routes/shortlink";
 import { PORT, NODE_ENV, CORS } from "./constants";
 import { StatusCodes } from "http-status-codes";
-import DigitalOcean from "./api/digitalOcean";
+import DigitalOcean from "./api/DigitalOcean";
 import Tasks from "./tasks";
 
 (async () => {
@@ -34,7 +35,8 @@ import Tasks from "./tasks";
     next();
   });
 
-  app.use("/api/file", noteRouter);
+  app.use("/api/file", fileRouter);
+  app.use("/api/shortlink", shortLinkRouter);
   app.all("/{*splat}", (req, res) => {
     res
       .status(StatusCodes.NOT_FOUND)
